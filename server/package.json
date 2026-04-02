@@ -2,10 +2,11 @@
   "name": "night-has-come-server",
   "version": "1.0.0",
   "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "express": "^4.18.2",
-    "http": "^0.0.1-security",
-    "path": "^0.12.7",
     "socket.io": "^4.7.2"
   }
 }

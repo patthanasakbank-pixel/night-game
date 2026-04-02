@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NIGHT HAS COME — คืนมรณะ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     AMBIENT PARTICLES
+═══════════════════════════════════════════════ -->
+
+<canvas id="particles"></canvas>
+
+<!-- ══════════════════════════════════════════════
+     NIGHT OVERLAY (cinematic darkness)
+═══════════════════════════════════════════════ -->
+
+<div id="nightOverlay" class="night-overlay hidden">
+  <div class="night-content">
+    <div class="night-moon">☽</div>
+    <div class="night-title glitch" data-text="กลางคืน">กลางคืน</div>
+    <div class="night-subtitle">ความมืดกำลังมาเยือน...</div>
+    <div class="blood-drips">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     KILL OVERLAY
+═══════════════════════════════════════════════ -->
+
+<div id="killOverlay" class="kill-overlay hidden">
+  <div class="kill-content">
+    <div class="skull-icon">💀</div>
+    <div id="killName" class="kill-name"></div>
+    <div id="killRole" class="kill-role"></div>
+    <div class="kill-subtitle">เสียชีวิตแล้ว</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SAVE OVERLAY
+═══════════════════════════════════════════════ -->
+
+<div id="saveOverlay" class="save-overlay hidden">
+  <div class="save-content">
+    <div class="save-icon">🏥</div>
+    <div id="saveName" class="save-name"></div>
+    <div class="save-subtitle">ได้รับการรักษาแล้ว!</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     GAMEOVER OVERLAY
+═══════════════════════════════════════════════ -->
+
+<div id="gameoverOverlay" class="gameover-overlay hidden">
+  <div class="gameover-content">
+    <div id="gameoverTitle" class="gameover-title"></div>
+    <div id="gameoverSub" class="gameover-sub"></div>
+    <div id="finalRoles" class="final-roles"></div>
+    <button id="resetBtn" class="btn-reset">เริ่มเกมใหม่</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     POLICE RESULT POPUP
+═══════════════════════════════════════════════ -->
+
+<div id="policePopup" class="police-popup hidden">
+  <div class="police-content">
+    <div class="police-badge">🔍</div>
+    <div class="police-title">ผลการสืบสวน</div>
+    <div id="policeText" class="police-text"></div>
+    <button onclick="closePolice()" class="btn-close-police">รับทราบ</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ENVELOPE / ROLE REVEAL
+═══════════════════════════════════════════════ -->
+
+<div id="envelopeScreen" class="envelope-screen hidden">
+  <div class="envelope-wrap">
+    <div class="envelope-body" id="envelopeBody">
+      <div class="envelope-flap"></div>
+      <div class="envelope-letter" id="envelopeLetter">
+        <div class="letter-seal">⚜</div>
+        <div class="letter-label">บทบาทของคุณ</div>
+        <div id="roleDisplay" class="role-display"></div>
+        <div id="roleDesc" class="role-desc"></div>
+        <div class="letter-footer">กรุณาเก็บความลับนี้ไว้</div>
+      </div>
+    </div>
+    <div class="tap-hint">แตะเพื่อเปิด</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     JOIN SCREEN
+═══════════════════════════════════════════════ -->
+
+<div id="joinScreen" class="screen active">
+  <div class="join-container">
+    <div class="logo-wrap">
+      <h1 class="logo glitch" data-text="NIGHT HAS COME">NIGHT HAS COME</h1>
+      <p class="logo-sub">คืนมรณะ — เกมมาเฟีย</p>
+    </div>
+    <div class="join-form">
+      <input id="nameInput" class="name-input" type="text"
+        placeholder="ใส่ชื่อของคุณ..."
+        maxlength="20" autocomplete="off" />
+      <button id="joinBtn" class="btn-primary">เข้าร่วมเกม</button>
+    </div>
+    <div class="join-hint">กด Enter หรือคลิกปุ่มเพื่อเข้าร่วม</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LOBBY SCREEN
+═══════════════════════════════════════════════ -->
+
+<div id="lobbyScreen" class="screen hidden">
+  <div class="lobby-container">
+    <h2 class="lobby-title">ห้องรอ</h2>
+    <p class="lobby-sub">รอผู้เล่นเพิ่มเติม... (ต้องการอย่างน้อย 4 คน)</p>
+    <div id="lobbyPlayers" class="lobby-players"></div>
+    <div class="lobby-count"><span id="playerCount">0</span> ผู้เล่น</div>
+    <button id="startBtn" class="btn-start hidden">⚔ เริ่มเกม</button>
+    <div id="waitMsg" class="wait-msg">รอให้ผู้เล่นคนแรกเริ่มเกม...</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     GAME UI
+═══════════════════════════════════════════════ -->
+
+<div id="gameUI" class="screen hidden">
+
+  <!-- TOP BAR -->
+
+  <div class="top-bar">
+    <div class="phase-display">
+      <span class="phase-icon" id="phaseIcon">☀</span>
+      <span id="phaseText">กลางวัน</span>
+      <span class="round-badge">รอบ <span id="roundNum">1</span></span>
+    </div>
+    <div class="timer-wrap">
+      <svg class="timer-svg" viewBox="0 0 44 44">
+        <circle class="timer-bg" cx="22" cy="22" r="19"/>
+        <circle class="timer-ring" id="timerRing" cx="22" cy="22" r="19"/>
+      </svg>
+      <span id="timerText" class="timer-text">3:00</span>
+    </div>
+    <div class="my-role-badge" id="myRoleBadge"></div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+
+  <div class="game-main">
+
+```
+<!-- PLAYER LIST -->
+<div class="panel panel-players">
+  <div class="panel-title">ผู้เล่น</div>
+  <div id="playerList" class="player-list"></div>
+</div>
+
+<!-- CHAT + ACTIONS -->
+<div class="panel panel-center">
+
+  <!-- DAY PANEL -->
+  <div id="dayPanel" class="phase-panel">
+    <div id="chatBox" class="chat-box"></div>
+    <div class="chat-input-wrap">
+      <input id="chatInput" class="chat-input"
+        placeholder="พิมพ์ข้อความ..."
+        maxlength="200" autocomplete="off" />
+      <button id="sendBtn" class="btn-send">ส่ง</button>
+    </div>
+    <div class="vote-section">
+      <div class="vote-label">🗳 โหวตเนรเทศ (คลิกที่ผู้เล่น)</div>
+      <div id="voteBar" class="vote-bar"></div>
+      <button id="endDayBtn" class="btn-danger hidden">จบการโหวต</button>
+    </div>
+  </div>
+
+  <!-- NIGHT PANEL -->
+  <div id="nightPanel" class="phase-panel hidden">
+    <div class="night-info">
+      <div class="night-role-action" id="nightRoleAction">
+        <div class="night-instruction" id="nightInstruction">รอให้มาเฟียทำการของพวกเขา...</div>
+        <div id="nightTargets" class="night-targets"></div>
+        <div id="nightStatus" class="night-status"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+```
+
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ERROR TOAST
+═══════════════════════════════════════════════ -->
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+<script src="app.js"></script>
+
+</body>
+</html>

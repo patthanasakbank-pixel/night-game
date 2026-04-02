@@ -1,0 +1,114 @@
+body {
+  margin: 0;
+  background: radial-gradient(circle at center, #0a0a0a, #000);
+  color: #ff1a1a;
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
+}
+
+/* Center screen */
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Input */
+input {
+  background: black;
+  border: 1px solid red;
+  color: red;
+  padding: 10px;
+  font-size: 18px;
+}
+
+/* Top bar */
+#topBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid red;
+}
+
+/* Player list */
+#playerList div {
+  padding: 8px;
+  border-bottom: 1px solid rgba(255,0,0,0.2);
+  cursor: pointer;
+}
+
+/* Dead player */
+.dead {
+  color: gray;
+  text-decoration: line-through;
+}
+
+/* Glitch text */
+@keyframes glitch {
+  0% { text-shadow: 2px 0 red; }
+  50% { text-shadow: -2px 0 red; }
+  100% { text-shadow: 2px 0 red; }
+}
+
+/* Overlay */
+#overlay {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:40px;
+  animation: glitch 0.2s infinite;
+  z-index: 999;
+}
+
+/* Envelope */
+#envelope {
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  border:2px solid red;
+  padding:40px;
+  font-size:30px;
+  background:black;
+  box-shadow: 0 0 20px red;
+  animation: pop 0.6s ease;
+  z-index: 1000;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.5) translate(-50%, -50%);
+    opacity:0;
+  }
+  to {
+    transform: scale(1) translate(-50%, -50%);
+    opacity:1;
+  }
+}
+
+/* Night effect */
+.night {
+  background: black !important;
+  animation: fadeDark 2s;
+}
+
+@keyframes fadeDark {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Chat */
+#chatBox {
+  height: 200px;
+  overflow-y: auto;
+  border-top: 1px solid red;
+  border-bottom: 1px solid red;
+  padding: 5px;
+}
